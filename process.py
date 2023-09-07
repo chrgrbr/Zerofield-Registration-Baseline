@@ -18,8 +18,8 @@ class Zerofield():  # SegmentationAlgorithm is not inherited in this class anymo
     def load_inputs(self):
         ##
 
-        fpath_fixed_image = glob.glob('/input/images/fixed-image/*.mha')[0]
-        fpath_moving_image = glob.glob('/input/images/moving-image/*.mha')[0]
+        fpath_fixed_image = glob.glob('/input/images/fixed/*.mha')[0]
+        fpath_moving_image = glob.glob('/input/images/moving/*.mha')[0]
         fpath_fixed_mask = glob.glob('/input/images/fixed-mask/*.mha')[0]
         fpath_moving_mask = glob.glob('/input/images/moving-mask/*.mha')[0]
     
