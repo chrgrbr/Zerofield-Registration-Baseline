@@ -5,23 +5,24 @@ import torch.nn.functional as F
 import glob
 from pathlib import Path
 
-#pip install -q "monai-weekly[nibabel, tqdm]" itk
-# Installing the recommended dependencies 
-# https://docs.monai.io/en/stable/installation.html
 
 
-class Zerofield():  # SegmentationAlgorithm is not inherited in this class anymore
+
+class Zerofield():  
     def __init__(self):
+        self.in_path = Path('/input/images')
+        self.out_path = Path('/output/images/displacement-field')
+        ##create displacement output folder 
+        self.out_path.mkdir(parents=True, exist_ok=True)
         pass
 
 
     def load_inputs(self):
-        ##
-
-        fpath_fixed_image = glob.glob('/input/images/fixed/*.mha')[0]
-        fpath_moving_image = glob.glob('/input/images/moving/*.mha')[0]
-        fpath_fixed_mask = glob.glob('/input/images/fixed-mask/*.mha')[0]
-        fpath_moving_mask = glob.glob('/input/images/moving-mask/*.mha')[0]
+         ## Grand Challenge Algorithms expect only one file in each input folder, i.e.:
+        fpath_fixed_image = list((self.in_path / 'fixed').glob('*.mha'))[0]
+        fpath_moving_image = list((self.in_path / 'moving').glob('*.mha'))[0]
+        fpath_fixed_mask = list((self.in_path / 'fixed-mask').glob('*.mha'))[0]
+        fpath_moving_mask = list((self.in_path / 'moving-mask').glob('*.mha'))[0]
     
         fixed_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_fixed_image))).unsqueeze(0)
         ##read other stuff
@@ -34,9 +35,8 @@ class Zerofield():  # SegmentationAlgorithm is not inherited in this class anymo
 
     def write_outputs(self, outputs):
         out = SimpleITK.GetImageFromArray(outputs)
-        out_path = Path('/output/displacement-field/field.mha')
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        SimpleITK.WriteImage(out, str(out_path))
+        ##You can give the output-mha file any name you want, but it must be in the /output/displacement-field folder
+        SimpleITK.WriteImage(out, str(self.out_path / 'thisIsAnArbitraryFilename.mha'))
         return 
     
     def predict(self, inputs):
@@ -48,9 +48,6 @@ class Zerofield():  # SegmentationAlgorithm is not inherited in this class anymo
         return displacement_field
 
     def process(self):
-        """
-        Read inputs from /input, process with your algorithm and write to /output
-        """
         inputs = self.load_inputs()
         outputs = self.predict(inputs)
         self.write_outputs(outputs)

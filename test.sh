@@ -29,7 +29,7 @@ docker run --rm \
 docker run --rm \
         -v zerofield-output-$VOLUME_SUFFIX:/output/ \
         -v $SCRIPTPATH/test/:/input/ \
-        insighttoolkit/simpleitk-notebooks:latest python -c "import SimpleITK, numpy; gt = SimpleITK.GetArrayFromImage(SimpleITK.ReadImage('/input/test_out_zero.mha')); pred = SimpleITK.GetArrayFromImage(SimpleITK.ReadImage('/output/displacement-field/field.mha')); assert numpy.allclose(gt, pred, atol=1e-2)"
+        insighttoolkit/simpleitk-notebooks:latest python -c "import SimpleITK, numpy; gt = SimpleITK.GetArrayFromImage(SimpleITK.ReadImage('/input/test_out_zero.mha')); pred = SimpleITK.GetArrayFromImage(SimpleITK.ReadImage('/output/images/displacement-field/thisIsAnArbitraryFilename.mha')); assert numpy.allclose(gt, pred, atol=1e-2)"
 
 if [ $? -eq 0 ]; then
     echo "Tests successfully passed..."
