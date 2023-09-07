@@ -29,13 +29,11 @@ class Zerofield():
         moving_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_image))).unsqueeze(0)
         fixed_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_fixed_mask))).unsqueeze(0)
         moving_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_mask))).unsqueeze(0)
-        
-
         return fixed_image, moving_image, fixed_mask, moving_mask
 
     def write_outputs(self, outputs):
         out = SimpleITK.GetImageFromArray(outputs)
-        ##You can give the output-mha file any name you want, but it must be in the /output/displacement-field folder
+        ##You can give the output-mha file any name you want, but it must be in the /output/images/displacement-field folder
         SimpleITK.WriteImage(out, str(self.out_path / 'thisIsAnArbitraryFilename.mha'))
         return 
     
