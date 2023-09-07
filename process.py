@@ -14,7 +14,7 @@ class Zerofield():
         self.out_path = Path('/output/images/displacement-field')
         ##create displacement output folder 
         self.out_path.mkdir(parents=True, exist_ok=True)
-        pass
+
 
 
     def load_inputs(self):
