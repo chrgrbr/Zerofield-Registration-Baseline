@@ -35,10 +35,10 @@ class Zerofield():
         moving_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_mask)))
 
         ## Care: Since we are now using SimpleITK, we want to permute the axes to match the expected shape of the model
-        fixed_image = fixed_image.permute(3, 2, 1)
-        moving_image = moving_image.permute(3, 2, 1)
-        fixed_mask = fixed_mask.permute(3, 2, 1)
-        moving_mask = moving_mask.permute(3, 2, 1)
+        fixed_image = fixed_image.permute(2, 1, 0)
+        moving_image = moving_image.permute(2, 1, 0)
+        fixed_mask = fixed_mask.permute(2, 1, 0)
+        moving_mask = moving_mask.permute(2, 1, 0)
 
 
         return fixed_image, moving_image, fixed_mask, moving_mask
