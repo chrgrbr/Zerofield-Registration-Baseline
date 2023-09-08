@@ -18,8 +18,6 @@ class Zerofield():
 
 
     def load_inputs(self):
-
-
         ###print list of available files
         print('Available files:')
         print('Fixed','\t\t', True if len(list((self.in_path / 'fixed').glob('*.mha'))) == 1 else False)
