@@ -18,17 +18,30 @@ class Zerofield():
 
 
     def load_inputs(self):
+
+
+        ###print list of available files
+        print('Available files:')
+        print('Fixed','\t\t', True if len(list((self.in_path / 'fixed').glob('*.mha'))) == 1 else False)
+        print('Moving','\t\t', True if len(list((self.in_path / 'moving').glob('*.mha'))) == 1 else False)
+        print('Fixed Mask','\t', True if len(list((self.in_path / 'fixed-mask').glob('*.mha'))) == 1 else False)
+        print('Moving Mask','\t', True if len(list((self.in_path / 'moving-mask').glob('*.mha'))) == 1 else False)
+
          ## Grand Challenge Algorithms expect only one file in each input folder, i.e.:
         fpath_fixed_image = list((self.in_path / 'fixed').glob('*.mha'))[0]
         fpath_moving_image = list((self.in_path / 'moving').glob('*.mha'))[0]
-        fpath_fixed_mask = list((self.in_path / 'fixed-mask').glob('*.mha'))[0]
-        fpath_moving_mask = list((self.in_path / 'moving-mask').glob('*.mha'))[0]
-    
         fixed_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_fixed_image))).unsqueeze(0)
-        ##read other stuff
         moving_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_image))).unsqueeze(0)
-        fixed_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_fixed_mask))).unsqueeze(0)
-        moving_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_mask))).unsqueeze(0)
+
+        if len(list((self.in_path / 'fixed-mask').glob('*.mha'))) == 1:
+            fixed_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(list((self.in_path / 'fixed-mask').glob('*.mha'))[0]))).unsqueeze(0)
+        else:
+            fixed_mask = None
+        if len(list((self.in_path / 'moving-mask').glob('*.mha'))) == 1:
+            moving_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(list((self.in_path / 'moving-mask').glob('*.mha'))[0]))).unsqueeze(0)
+        else:
+            moving_mask = None
+
         return fixed_image, moving_image, fixed_mask, moving_mask
 
     def write_outputs(self, outputs):
