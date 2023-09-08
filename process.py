@@ -10,12 +10,10 @@ from pathlib import Path
 
 class Zerofield():  
     def __init__(self):
-        self.in_path = Path('/input/images')
-        self.out_path = Path('/output/images/displacement-field')
+        self.in_path = Path('/data_abby1/grossbroehmer/L2R23_Algortihm_Submission/Algos/Zerofield/test/images')
+        self.out_path = Path('/data_abby1/grossbroehmer/L2R23_Algortihm_Submission/Algos/Zerofield/test/images/displacement-field')
         ##create displacement output folder 
         self.out_path.mkdir(parents=True, exist_ok=True)
-
-
 
     def load_inputs(self):
         ###print list of available files
@@ -28,17 +26,20 @@ class Zerofield():
          ## Grand Challenge Algorithms expect only one file in each input folder, i.e.:
         fpath_fixed_image = list((self.in_path / 'fixed').glob('*.mha'))[0]
         fpath_moving_image = list((self.in_path / 'moving').glob('*.mha'))[0]
-        fixed_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_fixed_image))).unsqueeze(0)
-        moving_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_image))).unsqueeze(0)
+        fpath_fixed_mask = list((self.in_path / 'fixed-mask').glob('*.mha'))[0]
+        fpath_moving_mask = list((self.in_path / 'moving-mask').glob('*.mha'))[0]
 
-        if len(list((self.in_path / 'fixed-mask').glob('*.mha'))) == 1:
-            fixed_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(list((self.in_path / 'fixed-mask').glob('*.mha'))[0]))).unsqueeze(0)
-        else:
-            fixed_mask = None
-        if len(list((self.in_path / 'moving-mask').glob('*.mha'))) == 1:
-            moving_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(list((self.in_path / 'moving-mask').glob('*.mha'))[0]))).unsqueeze(0)
-        else:
-            moving_mask = None
+        fixed_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_fixed_image)))
+        moving_image = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_image)))
+        fixed_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_fixed_mask)))
+        moving_mask = torch.from_numpy(SimpleITK.GetArrayFromImage(SimpleITK.ReadImage(fpath_moving_mask)))
+
+        ## Care: Since we are now using SimpleITK, we want to permute the axes to match the expected shape of the model
+        fixed_image = fixed_image.permute(3, 2, 1)
+        moving_image = moving_image.permute(3, 2, 1)
+        fixed_mask = fixed_mask.permute(3, 2, 1)
+        moving_mask = moving_mask.permute(3, 2, 1)
+
 
         return fixed_image, moving_image, fixed_mask, moving_mask
 
@@ -51,8 +52,7 @@ class Zerofield():
     def predict(self, inputs):
         # Read the input images
         moving_image, fixed_image, moving_mask, fixed_mask = inputs
-        D, H, W = fixed_image.shape[1:]
-
+        D, H, W = fixed_image.shape[:]
         displacement_field = torch.zeros((D, H, W, 3), dtype=torch.float32)
         return displacement_field
 
