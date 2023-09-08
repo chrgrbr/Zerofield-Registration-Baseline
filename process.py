@@ -10,8 +10,8 @@ from pathlib import Path
 
 class Zerofield():  
     def __init__(self):
-        self.in_path = Path('/data_abby1/grossbroehmer/L2R23_Algortihm_Submission/Algos/Zerofield/test/images')
-        self.out_path = Path('/data_abby1/grossbroehmer/L2R23_Algortihm_Submission/Algos/Zerofield/test/images/displacement-field')
+        self.in_path = Path('/input/images')
+        self.out_path = Path('/output/images/displacement-field')
         ##create displacement output folder 
         self.out_path.mkdir(parents=True, exist_ok=True)
 
